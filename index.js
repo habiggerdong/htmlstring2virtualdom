@@ -1,5 +1,6 @@
 let htmlStr='<div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div>';
 
+<<<<<<< HEAD
 //需要的正则表达式
 //拿到一个标签起始
 
@@ -10,3 +11,9 @@ function htmlParse(htmlStr){
         
     }
 }
+=======
+//匹配一个html标签开头部分
+const matchBeginningElement=/^<(.)*[^<]/;
+
+console.log(htmlStr.match(matchBeginningElement));
+>>>>>>> d7ca002e1e892513319fba6741c63fc627c6b03e
