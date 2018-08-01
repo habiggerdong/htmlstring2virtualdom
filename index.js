@@ -4,6 +4,7 @@ let htmlStr = '<div class="toolbar"><span><a href="#" class="toolbar_item comman
 //拿到一个标签起始
 let startIndex = 0;
 let endIndex = 0;
+let elementStack=[];//确认元素是否闭合的栈
 function htmlParse(htmlStr) {
     //做一些html清理工作，保证循环的时候是一个干净的html字符串
     if (typeof htmlStr !== 'string') {
