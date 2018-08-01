@@ -48,9 +48,11 @@ function htmlParse(htmlStr) {
     }
 }
 
-
+const matchElementNameAttribute=/(\w+)\s*(?:((\w+)(=)([^<>""]*)|(\w+)(=)([^<>""]*)|(\w+)(=)'([^<>'']*)'))/
 function parseHtmlElement(htmlStr){
     //正则表达式匹配元素名称属性的key  value
+    // div class="toolbar"
+
 }
 
-console.log(htmlParse(htmlStr));
+console.log("div class='toolbar'  name=a".match(matchElementNameAttribute));
