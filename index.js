@@ -1,5 +1,5 @@
 let htmlStr = '<div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div>';
-
+let VNode=require('./vnode');
 //需要的正则表达式
 //拿到一个标签起始
 let startIndex = 0;
@@ -47,12 +47,53 @@ function htmlParse(htmlStr) {
 
     }
 }
-
-const matchElementNameAttribute=/(\w+)\s*(?:((\w+)(=)([^<>""]*)|(\w+)(=)([^<>""]*)|(\w+)(=)'([^<>'']*)'))/
+// 
+// const matchElementNameAttribute=/(\w+)\s*(?:\s*((\w+)\s*(=)\s*("([^<>\s""]*)"|([^<>\s""]*)|'([^<>\s'']*)')))/
+const attriBute=/\s*((\w+)\s*(=)\s*("([^<>\s""]*)"|([^<>\s""]*)|'([^<>\s'']*)'))/
+const cname=/\s*(\/?)\s*(\w+)/
 function parseHtmlElement(htmlStr){
     //正则表达式匹配元素名称属性的key  value
     // div class="toolbar"
+    //匹配元素名称
+    let matchElementName= htmlStr.match(cname);
+    if(!matchElementName){
+        return;
+    }
+    let elementName=matchElementName[2];
+    let endTag=matchElementName[1];
+    if(typeof elementName!=='string'){
+        return;
+    }
+    elementName=elementName.toUpperCase();
+    if(endTag){
+        //上一个元素名称如果不相同忽略此次匹配
+        if(elementStack.length==0){
+            return;
+        }
+        let start=elementStack[elementStack.length];
+        let vNode=null;
+        if(start.name===elementName){
+            elementStack.pop();
+        }else{
+            vNode=new VNode(elementName,1);
+            vNode.parentNode=start;
+            elementStack.push(vNode);
+        }
+
+        
+    }
+
+
+    let vNode=new VNode(elementName,1);
+    if(!vNode.isSelfClosure){
+
+    }
 
 }
 
-console.log("div class='toolbar'  name=a".match(matchElementNameAttribute));
+function parseAttrbute(attrStr){
+
+}
+
+// console.log("class=toolbar  name=a".match(attriBute));
+console.log(" / name".match(cname));
