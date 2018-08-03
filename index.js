@@ -93,7 +93,7 @@ function parseHtmlElement(htmlStr) {
     }
 
     //解析
-    parseAttrbute(vNode, )
+    parseAttrbute(vNode,htmlStr)
 
 
 }
