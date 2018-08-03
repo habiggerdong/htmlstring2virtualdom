@@ -72,8 +72,8 @@ function parseHtmlElement(htmlStr) {
         if (elementStack.length == 0) {
             return;
         }
-       
-       
+
+
         //如果闭合出栈
         if (start.name !== elementName) {
             return;
@@ -82,24 +82,45 @@ function parseHtmlElement(htmlStr) {
         return;
     }
 
-    //
-     //dom结点
-     vNode = new VNode(elementName, 1);
-     vNode.parentNode = start;
-     start.addChildren(vNode)
-     if (!vNode.isSelfClosure) {
-         elementStack.push(vNode);
-     }
+    //替换掉元素，剩下属性
+    htmlStr = htmlStr.replace(cname, '');
+    //dom结点
+    vNode = new VNode(elementName, 1);
+    vNode.parentNode = start;
+    start.addChildren(vNode)
+    if (!vNode.isSelfClosure) {
+        elementStack.push(vNode);
+    }
+
+    //解析
+    parseAttrbute(vNode, )
 
 
 }
 
 
+
+function parseAttrbute(vNode, attrStr) {
+    let matchs = attrStr.match(attriBute);
+    while (matchs) {
+        vNode.setAttribute(matchs[2], matchs[4]);
+        attrStr = attrStr.replace(attriBute, '');
+        matchs = attrStr.match(attriBute);
+    }
+
+    //剩下单个属性
+    if (!attrStr) {
+        return;
+    }
+
+    let attrStrArray = attrStr.split(/\s+/);
+
+    attrStrArray.forEach(element => {
+        vNode.setAttribute(element,null);
+    });
 }
 
-function parseAttrbute(attrStr) {
+// console.log("adasdasdasd asdasdasd asdasd fggdf".match(attriBute));
+// console.log(" / name".match(cname));
 
-}
-
-// console.log("class=toolbar  name=a".match(attriBute));
-console.log(" / name".match(cname));
+console.log("adasdasdasd asdasdasd asdasd fggdf".split(/\s+/));
