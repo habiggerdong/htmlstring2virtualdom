@@ -20,7 +20,7 @@ function htmlParse(htmlStr) {
     // return htmlStr
     startIndex = 1;
 
-    let vNode=null;
+    let vNode = null;
 
     //找到一个完整的字符串头
     while (htmlStr) {
@@ -40,13 +40,13 @@ function htmlParse(htmlStr) {
             endIndex = htmlStr.indexOf('<');
             endIndex = htmlStr.lastIndexOf('>', endIndex);
             //找到一个完整的字符串头
-            vNode=parseHtmlElement(htmlStr.slice(startIndex, endIndex))
+            vNode = parseHtmlElement(htmlStr.slice(startIndex, endIndex))
             //截取字符串
 
             htmlStr = htmlStr.slice(endIndex + 1);
         }
         //认为匹配到了内容
-        if(startCharacter!=='<'){
+        if (startCharacter !== '<') {
             endIndex = htmlStr.indexOf('<');
             parseTextElement(htmlStr.slice(startIndex, endIndex));
             htmlStr = htmlStr.slice(endIndex);
@@ -76,20 +76,19 @@ function parseHtmlElement(htmlStr) {
     }
     elementName = elementName.toUpperCase();
     let start = elementStack[elementStack.length];
+    start = start ? start : null;
     let vNode = null;
     if (endTag) {
         //上一个元素名称如果不相同忽略此次匹配
-        if (elementStack.length == 0) {
+        //如果闭合出栈
+        if(!start){
             return;
         }
-
-
-        //如果闭合出栈
         if (start.name !== elementName) {
             return;
         }
-       
-        return  elementStack.pop();
+
+        return elementStack.pop();
     }
 
     //替换掉元素，剩下属性
@@ -97,13 +96,15 @@ function parseHtmlElement(htmlStr) {
     //dom结点
     vNode = new VNode(elementName, 1);
     vNode.parentNode = start;
-    start.addChildren(vNode)
+    if (start) {
+        start.addChildren(vNode)
+    }
     if (!vNode.isSelfClosure) {
         elementStack.push(vNode);
     }
 
     //解析
-    parseAttrbute(vNode,htmlStr)
+    parseAttrbute(vNode, htmlStr)
 
     return vNode;
 
@@ -128,14 +129,14 @@ function parseAttrbute(vNode, attrStr) {
     let attrStrArray = attrStr.split(/\s+/);
 
     attrStrArray.forEach(element => {
-        vNode.setAttribute(element,null);
+        vNode.setAttribute(element, null);
     });
 }
 
-function parseTextElement(textStr){
+function parseTextElement(textStr) {
     //拿到父节点
     let parentNode = elementStack[elementStack.length];
-    let textNode=new VNode(textStr,3)
+    let textNode = new VNode(textStr, 3)
     parentNode.addChildren(textNode);
 
 }
@@ -144,3 +145,4 @@ function parseTextElement(textStr){
 // console.log(" / name".match(cname));
 
 // console.log("adasdasdasd asdasdasd asdasd fggdf".split(/\s+/));
+console.log(htmlParse(htmlStr))
