@@ -1,4 +1,4 @@
-let htmlStr = '<div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div>';
+let htmlStr = '<div class="toolbar"><span><a href="#" class="toolbar_item command_help help">dsadasdsadsahHhhassjsadj</a></span></div>';
 let VNode = require('./vnode');
 //需要的正则表达式
 //拿到一个标签起始
@@ -20,6 +20,8 @@ function htmlParse(htmlStr) {
     // return htmlStr
     startIndex = 1;
 
+    let vNode=null;
+
     //找到一个完整的字符串头
     while (htmlStr) {
         //判断是不是<开头，如果不是并且index为0  那么这个就不是一个合法的字符串
@@ -38,14 +40,22 @@ function htmlParse(htmlStr) {
             endIndex = htmlStr.indexOf('<');
             endIndex = htmlStr.lastIndexOf('>', endIndex);
             //找到一个完整的字符串头
-            parseHtmlElement(htmlStr.slice(startIndex, endIndex))
+            vNode=parseHtmlElement(htmlStr.slice(startIndex, endIndex))
             //截取字符串
 
-            htmlStr = htmlStr(endIndex + 1);
+            htmlStr = htmlStr.slice(endIndex + 1);
+        }
+        //认为匹配到了内容
+        if(startCharacter!=='<'){
+            endIndex = htmlStr.indexOf('<');
+            parseTextElement(htmlStr.slice(startIndex, endIndex));
+            htmlStr = htmlStr.slice(endIndex);
         }
 
 
     }
+
+    return vNode;
 }
 // 
 // const matchElementNameAttribute=/(\w+)\s*(?:\s*((\w+)\s*(=)\s*("([^<>\s""]*)"|([^<>\s""]*)|'([^<>\s'']*)')))/
@@ -78,8 +88,8 @@ function parseHtmlElement(htmlStr) {
         if (start.name !== elementName) {
             return;
         }
-        elementStack.pop();
-        return;
+       
+        return  elementStack.pop();
     }
 
     //替换掉元素，剩下属性
@@ -94,6 +104,8 @@ function parseHtmlElement(htmlStr) {
 
     //解析
     parseAttrbute(vNode,htmlStr)
+
+    return vNode;
 
 
 }
@@ -120,7 +132,15 @@ function parseAttrbute(vNode, attrStr) {
     });
 }
 
+function parseTextElement(textStr){
+    //拿到父节点
+    let parentNode = elementStack[elementStack.length];
+    let textNode=new VNode(textStr,3)
+    parentNode.addChildren(textNode);
+
+}
+
 // console.log("adasdasdasd asdasdasd asdasd fggdf".match(attriBute));
 // console.log(" / name".match(cname));
 
-console.log("adasdasdasd asdasdasd asdasd fggdf".split(/\s+/));
+// console.log("adasdasdasd asdasdasd asdasd fggdf".split(/\s+/));
