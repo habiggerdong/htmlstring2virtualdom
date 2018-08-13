@@ -5,6 +5,7 @@ let VNode = require('./vnode');
 let startIndex = 0;
 let endIndex = 0;
 let elementStack = [];//确认元素是否闭合的栈
+let vNode = new VNode();
 function htmlParse(htmlStr) {
     //做一些html清理工作，保证循环的时候是一个干净的html字符串
     if (typeof htmlStr !== 'string') {
@@ -20,7 +21,7 @@ function htmlParse(htmlStr) {
     // return htmlStr
     startIndex = 1;
 
-    let vNode = null;
+    
 
     //找到一个完整的字符串头
     while (htmlStr) {
@@ -40,7 +41,7 @@ function htmlParse(htmlStr) {
             endIndex = htmlStr.indexOf('<');
             endIndex = htmlStr.lastIndexOf('>', endIndex);
             //找到一个完整的字符串头
-            vNode = parseHtmlElement(htmlStr.slice(startIndex, endIndex))
+          parseHtmlElement(htmlStr.slice(startIndex, endIndex))
             //截取字符串
             if(endIndex===-1){
                 htmlStr="";
@@ -83,7 +84,8 @@ function parseHtmlElement(htmlStr) {
     elementName = elementName.toUpperCase();
     let start = elementStack[elementStack.length-1];
     start = start ? start : null;
-    let vNode = null;
+    
+    
     if (endTag) {
         //上一个元素名称如果不相同忽略此次匹配
         //如果闭合出栈
@@ -96,23 +98,24 @@ function parseHtmlElement(htmlStr) {
 
         return elementStack.pop();
     }
-
+    if (!start) {
+        vNode.setElementName
+    }
+    let _vNode = null;
     //替换掉元素，剩下属性
     htmlStr = htmlStr.replace(cname, '');
     //dom结点
-    vNode = new VNode(elementName, 1);
-    vNode.parentNode = start;
-    if (start) {
-        start.addChildren(vNode)
-    }
-    if (!vNode.isSelfClosure) {
-        elementStack.push(vNode);
+    _vNode = new VNode(elementName, 1);
+    _vNode.parentNode = start;
+    start.addChildren(_vNode);
+    if (!_vNode.isSelfClosure) {
+        elementStack.push(_vNode);
     }
 
     //解析
-    parseAttrbute(vNode, htmlStr)
+    parseAttrbute(_vNode, htmlStr)
 
-    return vNode;
+    // return vNode;
 
 
 }
@@ -152,3 +155,6 @@ function parseTextElement(textStr) {
 
 // console.log("adasdasdasd asdasdasd asdasd fggdf".split(/\s+/));
 console.log(htmlParse(htmlStr))
+
+
+//需要解决的问题  Vnode和解析分离
