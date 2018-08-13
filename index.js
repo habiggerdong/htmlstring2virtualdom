@@ -1,4 +1,4 @@
-let htmlStr = '<div class="toolbar"><span><a href="#" class="toolbar_item command_help help">dsadasdsadsahHhhassjsadj</a></span></div>';
+let htmlStr = '<div class="toolbar"><span></span></div>';
 let VNode = require('./vnode');
 //需要的正则表达式
 //拿到一个标签起始
@@ -42,15 +42,21 @@ function htmlParse(htmlStr) {
             //找到一个完整的字符串头
             vNode = parseHtmlElement(htmlStr.slice(startIndex, endIndex))
             //截取字符串
-
+            if(endIndex===-1){
+                htmlStr="";
+                return;
+            }
             htmlStr = htmlStr.slice(endIndex + 1);
         }
         //认为匹配到了内容
         if (startCharacter !== '<') {
+            startIndex = 0;
             endIndex = htmlStr.indexOf('<');
             parseTextElement(htmlStr.slice(startIndex, endIndex));
             htmlStr = htmlStr.slice(endIndex);
         }
+        startCharacter = htmlStr.charAt(0);
+        startIndex = 1;
 
 
     }
@@ -75,7 +81,7 @@ function parseHtmlElement(htmlStr) {
         return;
     }
     elementName = elementName.toUpperCase();
-    let start = elementStack[elementStack.length];
+    let start = elementStack[elementStack.length-1];
     start = start ? start : null;
     let vNode = null;
     if (endTag) {
